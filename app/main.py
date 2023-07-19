@@ -5,7 +5,7 @@ from semantic_kernel.connectors.ai.open_ai import (
 )
 from semantic_kernel.orchestration.context_variables import ContextVariables
 
-useAzureOpenAI = False
+useAzureOpenAI = True
 
 
 def main():
