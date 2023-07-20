@@ -22,6 +22,5 @@ class TestCodeReviewChain(unittest.TestCase):
 
         chain = CodeReviewChain.from_llm(llm, verbose=True)
         response = chain.run({"input": code_block, "lang": "C#"})
-        comments_json = json.loads(response)
-        comments = ReviewCommentCollection.parse_obj(comments_json)
+        comments = ReviewCommentCollection.parse_obj(response)
         assert comments is not None
