@@ -5,14 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Current File",
+            "name": "Python: main",
             "type": "python",
             "request": "launch",
             "cwd": "${workspaceFolder}",
-            "program": "hello_world/main.py", // or ${file} for the current file
+            "program": "app/main.py", // or ${file} for the current file
             "console": "integratedTerminal",
-            "justMyCode": true,
-            "preLaunchTask": "install"
+            "justMyCode": true
         }
     ]
 }

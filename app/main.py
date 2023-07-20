@@ -1,4 +1,6 @@
 import semantic_kernel as sk
+import json
+import logging
 from semantic_kernel.connectors.ai.open_ai import (
     AzureTextCompletion,
     OpenAITextCompletion,
@@ -9,6 +11,12 @@ useAzureOpenAI = True
 
 
 def main():
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(message)s",
+        handlers=[logging.FileHandler("debug.log"), logging.StreamHandler()],
+    )
+
     kernel = sk.Kernel()
 
     # Configure AI service used by the kernel. Load settings from the .env file.
@@ -25,23 +33,22 @@ def main():
 
     skills_directory = "skills"
 
-    fun_skill = kernel.import_semantic_skill_from_directory(
-        skills_directory, "FunSkill"
+    reviewer_skill = kernel.import_semantic_skill_from_directory(
+        skills_directory, "Reviewer"
     )
 
-    joke_function = fun_skill["Joke"]
+    review_function = reviewer_skill["Review"]
+
+    code_block = ""
+    with open("tests\\data\\method-UpdateOrderAsync.cs", "+r") as file:
+        code_block = file.read()
 
     # The "input" variable in the prompt is set by "content" in the ContextVariables object.
-    context_variables = ContextVariables(
-        content="time travel to dinosaur age", variables={"style": "standup comedy"}
-    )
-    result = joke_function(variables=context_variables)
+    context_variables = ContextVariables(content=code_block, variables={"lang": "C#"})
+    result = review_function(variables=context_variables)
 
-    print(result)
-
-    # You can also invoke functions like this
-    # result = await jokeFunction.invoke_async("time travel to dinosaur age")
-    # print(result)
+    feedback = json.loads(result.result)
+    print(json.dumps(feedback, indent=2))
 
 
 if __name__ == "__main__":
