@@ -15,3 +15,4 @@ class CodeReviewChain:
         prompt = PromptTemplate.from_file(prompt_abs_path, ["input", "lang"])
         chain = create_structured_output_chain(ReviewCommentCollection, llm, prompt, verbose=True)
         return chain
+

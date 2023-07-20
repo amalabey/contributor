@@ -1,4 +1,3 @@
-import json
 import os
 from app.reviewer.model import ReviewCommentCollection
 from app.reviewer.code_review_chain import CodeReviewChain
