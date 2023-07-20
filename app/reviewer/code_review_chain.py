@@ -13,5 +13,6 @@ class CodeReviewChain:
         parent_directory = os.path.dirname(script_path)
         prompt_abs_path = os.path.join(parent_directory, "prompts", "review.txt")
         prompt = PromptTemplate.from_file(prompt_abs_path, ["input", "lang"])
-        chain = create_structured_output_chain(ReviewCommentCollection, llm, prompt, verbose=True)
+        # chain = create_structured_output_chain(ReviewCommentCollection, llm, prompt, verbose=True)
+        chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
         return chain
