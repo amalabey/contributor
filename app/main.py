@@ -7,7 +7,7 @@ from semantic_kernel.connectors.ai.open_ai import (
 )
 from semantic_kernel.orchestration.context_variables import ContextVariables
 
-useAzureOpenAI = True
+useAzureOpenAI = False
 
 
 def main():
@@ -40,14 +40,15 @@ def main():
     review_function = reviewer_skill["Review"]
 
     code_block = ""
-    with open("tests\\data\\method-UpdateOrderAsync.cs", "+r") as file:
+    with open("tests/data/method-UpdateOrderAsync.cs", "+r") as file:
         code_block = file.read()
 
     # The "input" variable in the prompt is set by "content" in the ContextVariables object.
     context_variables = ContextVariables(content=code_block, variables={"lang": "C#"})
     result = review_function(variables=context_variables)
 
-    feedback = json.loads(result.result)
+    result_text = result.result  # .replace("\n", "")
+    feedback = json.loads(result_text, strict=False)
     print(json.dumps(feedback, indent=2))
 
 
