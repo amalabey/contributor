@@ -7,7 +7,7 @@ from langchain.vectorstores import Chroma
 class TestCodebaseChromadbIndexer(unittest.TestCase):
     def test_when_csharp_repo_given_builds_vector_db(self):
         db_path = ".db"
-        indexer = CodebaseChromadbIndexer("../eShopOnWeb", db_path,
+        indexer = CodebaseChromadbIndexer("../../devops/eShopOnWeb-amalzpd", db_path,
                                           ["bin", "obj", ".git", ".vs"],
                                           [".cs", ".cshtml", ".js", ".css", ".md"])
         indexer.index()
