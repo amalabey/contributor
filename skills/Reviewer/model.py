@@ -9,6 +9,12 @@ class ReviewComment(BaseModel):
     example: Optional[str] = Field(..., description="Example code in markdown format")
 
 
+class ReviewCommentsCollection(BaseModel):
+    """List of review comments for a given code file"""
+
+    items: Sequence[ReviewComment] = Field(..., description="List of review comments")
+
+
 class CodeBlock(BaseModel):
     """Represents a code block between two line numbers"""
 

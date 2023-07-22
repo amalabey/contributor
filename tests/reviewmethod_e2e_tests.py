@@ -2,6 +2,7 @@ import json
 import unittest
 from semantic_kernel.orchestration.context_variables import ContextVariables
 from helpers import get_kernel, get_skill
+from skills.Reviewer.model import ReviewCommentsCollection
 
 
 class TestReviewMethod(unittest.TestCase):
@@ -18,5 +19,7 @@ class TestReviewMethod(unittest.TestCase):
         result = review_function(variables=context_variables)
 
         review_comments_payload = result.result
-        review_comments = json.loads(review_comments_payload, strict=False)
+        comments = json.loads(review_comments_payload, strict=False)
+        review_comments_dict = {"items": comments}
+        review_comments = ReviewCommentsCollection.model_validate(review_comments_dict)
         self.assertTrue(len(review_comments) > 0)
