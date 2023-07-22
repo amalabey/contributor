@@ -2,12 +2,12 @@ import semantic_kernel as sk
 import json
 import logging
 from semantic_kernel.connectors.ai.open_ai import (
-    AzureTextCompletion,
-    OpenAITextCompletion,
+    AzureChatCompletion,
+    OpenAIChatCompletion,
 )
 from semantic_kernel.orchestration.context_variables import ContextVariables
 
-useAzureOpenAI = False
+useAzureOpenAI = True
 
 
 def main():
@@ -23,12 +23,14 @@ def main():
     if useAzureOpenAI:
         deployment, api_key, endpoint = sk.azure_openai_settings_from_dot_env()
         kernel.add_text_completion_service(
-            "dv", AzureTextCompletion(deployment, endpoint, api_key)
+            "dv",
+            AzureChatCompletion(deployment, endpoint, api_key),
         )
     else:
         api_key, org_id = sk.openai_settings_from_dot_env()
         kernel.add_text_completion_service(
-            "dv", OpenAITextCompletion("text-davinci-003", api_key, org_id)
+            "dv",
+            OpenAIChatCompletion("gpt-3.5-turbo", api_key, org_id),
         )
 
     skills_directory = "skills"

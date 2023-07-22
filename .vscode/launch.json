@@ -11,7 +11,7 @@
             "cwd": "${workspaceFolder}",
             "program": "app/main.py", // or ${file} for the current file
             "console": "integratedTerminal",
-            "justMyCode": true
+            "justMyCode": false
         }
     ]
 }
