@@ -1,13 +1,41 @@
 from difflib import Differ
-from typing import Iterator, List
+import json
+from typing import Iterator
 from semantic_kernel.skill_definition import (
     sk_function,
     sk_function_context_parameter,
 )
 from semantic_kernel.orchestration.sk_context import SKContext
+from skills.Reviewer.model import CodeBlock, CodeBlocksCollection
 
 
-class GetChangedBlocks:
+class ReviewerPlugin:
+    @sk_function(
+        description="Returns changed method blocks based on a list of start and end line numbers",
+        name="get_changed_methods",
+    )
+    @sk_function_context_parameter(
+        name="methods",
+        description="List of methods names and corresponding start and end line numbers",
+    )
+    @sk_function_context_parameter(
+        name="changed_blocks",
+        description="List of start and end line numbers of changed blocks",
+    )
+    def get_changed_methods(self, context: SKContext) -> str:
+        methods = json.loads(context["methods"])
+        blocks = json.loads(context["changed_blocks"])
+        changed_methods = list()
+
+        for method_name, method_start, method_end in methods:
+            if any(
+                block_end >= method_start and block_start <= method_end
+                for block_start, block_end in blocks
+            ):
+                changed_methods.append((method_name, method_start, method_end))
+
+        return json.dumps(changed_methods)
+
     @sk_function(
         description="Returns a list of changed blocks based on a list of start and end line numbers",
         name="get_changed_blocks",
@@ -20,11 +48,14 @@ class GetChangedBlocks:
         name="to_source",
         description="To source code for the comparison",
     )
-    def get_changed_blocks(self, context: SKContext) -> List[tuple[int, int]]:
-        from_source = context.get_parameter_value("from_source")
-        to_source = context.get_parameter_value("to_source")
-        changed_blocks = list(self._get_changed_blocks(from_source, to_source))
-        return changed_blocks
+    def get_changed_blocks(self, context: SKContext) -> str:
+        from_source = context["from_source"]
+        to_source = context["to_source"]
+        changed_blocks = [
+            CodeBlock(start_line=blk[0], end_line=blk[1])
+            for blk in self._get_changed_blocks(from_source, to_source)
+        ]
+        return CodeBlocksCollection(items=changed_blocks).model_dump_json()
 
     def _get_changed_lines(self, source: str, target: str) -> Iterator[int]:
         differ = Differ()

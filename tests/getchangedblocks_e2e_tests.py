@@ -1,8 +1,8 @@
-import json
 import unittest
 from semantic_kernel.orchestration.context_variables import ContextVariables
 from helpers import get_kernel
-from skills.Reviewer.ReviewerPlugin import ReviewerPlugin
+from skills.Reviewer.model import CodeBlocksCollection
+from skills.Reviewer.plugin import ReviewerPlugin
 
 
 class TestGetChangedBlocks(unittest.TestCase):
@@ -22,5 +22,5 @@ class TestGetChangedBlocks(unittest.TestCase):
         )
 
         result = getchangedblocks_func.invoke(variables=context_variables)
-        changed_blocks = json.loads(result.result)
+        changed_blocks = CodeBlocksCollection.model_validate_json(result.result)
         assert changed_blocks is not None
