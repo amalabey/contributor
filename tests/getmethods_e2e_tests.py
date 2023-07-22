@@ -19,6 +19,6 @@ class TestReviewMethod(unittest.TestCase):
 
         result = getmethods_func(variables=context_variables)
 
-        review_comments_payload = result.result
-        review_comments = json.loads(review_comments_payload, strict=False)
-        self.assertTrue(len(review_comments) > 0)
+        methods_payload = result.result
+        methods = json.loads(methods_payload, strict=False)
+        self.assertTrue(len(methods) > 0)
