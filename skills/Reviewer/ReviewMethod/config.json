@@ -1,0 +1,27 @@
+{
+    "schema": 1,
+    "type": "completion",
+    "description": "Reviews provided method and returns a list of comments.",
+    "completion": {
+        "max_tokens": 1000,
+        "temperature": 0,
+        "top_p": 0,
+        "presence_penalty": 0,
+        "frequency_penalty": 0
+    },
+    "input": {
+        "parameters": [
+            {
+                "name": "lang",
+                "description": "Programming language",
+                "defaultValue": ""
+            },
+            {
+                "name": "input",
+                "description": "Method code block to review.",
+                "defaultValue": ""
+            }
+        ]
+    },
+    "default_backends": []
+}

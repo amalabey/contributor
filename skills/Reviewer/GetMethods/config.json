@@ -1,7 +1,7 @@
 {
     "schema": 1,
     "type": "completion",
-    "description": "Reviews provided code block and returns a list of comments.",
+    "description": "Returns the list of method/function names and their start and end line numbers",
     "completion": {
         "max_tokens": 1000,
         "temperature": 0,
@@ -18,7 +18,7 @@
             },
             {
                 "name": "input",
-                "description": "Code block to review.",
+                "description": "Code file to extract methods from",
                 "defaultValue": ""
             }
         ]
