@@ -1,12 +1,15 @@
 from difflib import Differ
-import json
 from typing import Iterator
 from semantic_kernel.skill_definition import (
     sk_function,
     sk_function_context_parameter,
 )
 from semantic_kernel.orchestration.sk_context import SKContext
-from skills.Reviewer.model import CodeBlock, CodeBlocksCollection
+from skills.Reviewer.model import (
+    CodeBlock,
+    CodeBlocksCollection,
+    MethodInfoCollection,
+)
 
 
 class ReviewerPlugin:
@@ -23,18 +26,18 @@ class ReviewerPlugin:
         description="List of start and end line numbers of changed blocks",
     )
     def get_changed_methods(self, context: SKContext) -> str:
-        methods = json.loads(context["methods"])
-        blocks = json.loads(context["changed_blocks"])
+        methods = MethodInfoCollection.model_validate_json(context["methods"])
+        blocks = CodeBlocksCollection.model_validate_json(context["changed_blocks"])
         changed_methods = list()
 
-        for method_name, method_start, method_end in methods:
+        for method in methods.items:
             if any(
-                block_end >= method_start and block_start <= method_end
-                for block_start, block_end in blocks
+                blk.end_line >= method.start_line and blk.start_line <= method.end_line
+                for blk in blocks.items
             ):
-                changed_methods.append((method_name, method_start, method_end))
+                changed_methods.append(method)
 
-        return json.dumps(changed_methods)
+        return MethodInfoCollection(items=changed_methods).model_dump_json()
 
     @sk_function(
         description="Returns a list of changed blocks based on a list of start and end line numbers",

@@ -1,7 +1,12 @@
-import json
 import unittest
 from semantic_kernel.orchestration.context_variables import ContextVariables
 from helpers import get_kernel
+from skills.Reviewer.model import (
+    CodeBlock,
+    CodeBlocksCollection,
+    MethodInfo,
+    MethodInfoCollection,
+)
 from skills.Reviewer.plugin import ReviewerPlugin
 
 
@@ -13,15 +18,29 @@ class TestGetChangedMethods(unittest.TestCase):
         skill = kernel.import_skill(ReviewerPlugin(), "ReviewerPlugin")
         getchangedmethods_func = skill["get_changed_methods"]
 
-        changed_methods = "[[48, 49], [50, 54]]"
-        methods = '[{"name":"AddItemToBasket", "start":23,"end":30},{"name":"DeleteBasketAsync", "start":32,"end":36},{"name":"GetBasketItemCountAsync", "start":38,"end":57},{"name":"SetQuantities", "start":59,"end":74},{"name":"TransferBasketAsync", "start":76,"end":85}]'
+        changed_blocks = CodeBlocksCollection(
+            items=[
+                CodeBlock(start_line=48, end_line=49),
+                CodeBlock(start_line=50, end_line=54),
+            ]
+        )
+        methods = MethodInfoCollection(
+            items=[
+                MethodInfo(name="AddItemToBasket", start_line=23, end_line=30),
+                MethodInfo(name="DeleteBasketAsync", start_line=32, end_line=36),
+                MethodInfo(name="GetBasketItemCountAsync", start_line=38, end_line=57),
+                MethodInfo(name="SetQuantities", start_line=59, end_line=74),
+                MethodInfo(name="TransferBasketAsync", start_line=76, end_line=85),
+            ]
+        )
         context_variables = ContextVariables(
             variables={
-                "changed_blocks": json.dumps(changed_methods),
-                "methods": json.dumps(methods),
+                "changed_blocks": changed_blocks.model_dump_json(),
+                "methods": methods.model_dump_json(),
             }
         )
 
         result = getchangedmethods_func.invoke(variables=context_variables)
-        changed_methods = json.loads(result.result)
+        changed_methods = MethodInfoCollection.model_validate_json(result.result)
         assert changed_methods is not None
+        assert len(changed_methods.items) > 0

@@ -30,3 +30,9 @@ class MethodInfo(CodeBlock):
     """Represents a method or a function in a programming language"""
 
     name: str = Field(..., description="The name of the function or the method")
+
+
+class MethodInfoCollection(BaseModel):
+    """List of methods in a given code file"""
+
+    items: Sequence[MethodInfo] = Field(..., description="List of methods")
