@@ -1,13 +1,13 @@
 import unittest
 from semantic_kernel.orchestration.context_variables import ContextVariables
 from helpers import get_kernel
-from skills.Reviewer.model import (
+from skills.Review.model import (
     CodeBlock,
     CodeBlocksCollection,
     MethodInfo,
     MethodInfoCollection,
 )
-from skills.Reviewer.plugin import ReviewerPlugin
+from skills.Review.plugin import ReviewerPlugin
 
 
 class TestGetChangedMethods(unittest.TestCase):

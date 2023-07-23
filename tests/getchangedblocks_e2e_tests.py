@@ -1,8 +1,8 @@
 import unittest
 from semantic_kernel.orchestration.context_variables import ContextVariables
 from helpers import get_kernel
-from skills.Reviewer.model import CodeBlocksCollection
-from skills.Reviewer.plugin import ReviewerPlugin
+from skills.Review.model import CodeBlocksCollection
+from skills.Review.plugin import ReviewerPlugin
 
 
 class TestGetChangedBlocks(unittest.TestCase):

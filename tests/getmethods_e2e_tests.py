@@ -1,7 +1,7 @@
 import unittest
 from semantic_kernel.orchestration.context_variables import ContextVariables
 from helpers import get_kernel, get_skill
-from skills.Reviewer.model import MethodInfoCollection
+from skills.Review.model import MethodInfoCollection
 
 
 class TestGetMethods(unittest.TestCase):
