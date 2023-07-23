@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "co-developer"
+version = "0.1.0"
+description = "A virtual developer that can contribute to a project alongside humans"
+authors = ["Amal Abeygunawardana <amalabey@gmail.com>"]
+readme = "README.md"
+packages = [{include = "co_developer"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+langchain = "^0.0.240"
+openai = "^0.27.8"
+urllib3 = "1.26.6"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
