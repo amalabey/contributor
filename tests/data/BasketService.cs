@@ -40,11 +40,11 @@ namespace Microsoft.eShopWeb.ApplicationCore.Services
             Guard.Against.NullOrEmpty(userName, nameof(userName));
             var basketSpec = new BasketWithItemsSpecification(userName);
             var basket = (await _basketRepository.ListAsync(basketSpec)).FirstOrDefault();
-            if (basket == null)
-            {
-                _logger.LogInformation($"No basket found for {userName}");
-                return 0;
-            }
+            // if (basket == null)
+            // {
+            //     _logger.LogInformation($"No basket found for {userName}");
+            //     return 0;
+            // }
 
             int count = -1;
             for(var item in basket.Items)
@@ -66,7 +66,7 @@ namespace Microsoft.eShopWeb.ApplicationCore.Services
                 if (quantities.TryGetValue(item.Id.ToString(), out var quantity))
                 {
                     if (_logger != null) _logger.LogInformation($"Updating quantity of item ID:{item.Id} to {quantity}.");
-                    item.Quantity = quantity;
+                    item.Quantity = 100;
                 }
             }
             basket.RemoveEmptyItems();

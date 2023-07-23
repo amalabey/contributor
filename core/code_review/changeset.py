@@ -1,0 +1,56 @@
+from abc import ABC, abstractmethod
+from difflib import Differ
+from typing import Iterator
+from core.code_review.models import CodeBlock, CodeBlocksCollection
+
+
+class BaseChangesetProvider(ABC):
+    """Base class for changeset providers"""
+
+    """ Compares current code with previous and
+    returns a list of changed blocks of code"""
+
+    @abstractmethod
+    def get_changed_blocks(
+        self, current_code: str, previous_code: str
+    ) -> CodeBlocksCollection:
+        pass
+
+
+class ChangesetProvider(BaseChangesetProvider):
+    def get_changed_blocks(
+        self, current_code: str, previous_code: str
+    ) -> CodeBlocksCollection:
+        changed_blocks = [
+            CodeBlock(start_line=blk[0], end_line=blk[1])
+            for blk in self._get_changed_blocks(previous_code, current_code)
+        ]
+        return CodeBlocksCollection(items=changed_blocks)
+
+    def _get_changed_lines(self, source: str, target: str) -> Iterator[int]:
+        differ = Differ()
+        diffs = differ.compare(source.splitlines(True), target.splitlines(True))
+        lineNum = 0
+        for line in diffs:
+            code = line[:2]
+            if code in ("  ", "+ "):
+                lineNum += 1
+            if code == "+ ":
+                yield lineNum
+
+    def _get_changed_blocks(
+        self, source: str, target: str
+    ) -> Iterator[tuple[int, int]]:
+        index = 0
+        blockStart = 0
+        for changed_line_num in self._get_changed_lines(source, target):
+            index += 1
+            if blockStart == 0:
+                blockStart = changed_line_num
+                continue
+            elif changed_line_num > index:
+                yield (blockStart, changed_line_num)
+                blockStart = 0
+            index = changed_line_num
+        if blockStart > 0:
+            yield (blockStart, index)
