@@ -34,7 +34,7 @@ class MethodInfoCollection(BaseModel):
 class ReviewComment(BaseModel):
     """Represents a code review comment"""
 
-    suggestion: str = Field(..., description="Review comment for the given code")
+    comment: str = Field(..., description="Review comment for the given code")
     example: Optional[str] = Field(..., description="Example code in markdown format")
 
 

@@ -27,8 +27,17 @@ class SyntaxProvider(BaseSyntaxProvider):
         script_path = os.path.abspath(__file__)
         parent_directory = os.path.dirname(script_path)
         prompt_abs_path = os.path.join(parent_directory, "prompts", "get-methods.txt")
+        contents_with_line_numbers = self._add_line_numbers(code_contents)
 
         prompt = PromptTemplate.from_file(prompt_abs_path, ["input", "lang"])
         chain = LLMChain(llm=self.llm, prompt=prompt, verbose=self.verbose)
-        result = chain.run({"input": code_contents, "lang": lang})
+        result = chain.run({"input": contents_with_line_numbers, "lang": lang})
         return MethodInfoCollection.parse_raw(result)
+
+    def _add_line_numbers(self, original_text: str) -> str:
+        lines = original_text.splitlines()
+        updated_lines = list()
+        for line_number, line in enumerate(lines, start=1):
+            line_with_number = f"{line_number} {line}"
+            updated_lines.append(line_with_number)
+        return "\n".join(updated_lines)

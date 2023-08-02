@@ -1,5 +1,6 @@
 import unittest
 from core.code_review.changeset import ChangesetProvider
+from core.code_review.review import ReviewCommentProvider
 from core.code_review.syntax import SyntaxProvider
 from tests.helpers import get_model
 
@@ -36,3 +37,36 @@ class CodeReviewTests(unittest.TestCase):
 
         changed_methods = changeset_provider.get_changed_methods(methods, blocks)
         self.assertGreater(len(changed_methods.items), 0)
+        self.assertTrue(
+            any(
+                m.name == "GetBasketItemCountAsync"
+                and m.start_line == 38
+                and m.end_line == 57
+                for m in changed_methods.items
+            )
+        )
+        self.assertTrue(
+            any(
+                m.name == "SetQuantities" and m.start_line == 59 and m.end_line == 74
+                for m in changed_methods.items
+            )
+        )
+
+    def test_get_review_comments_when_csharp_code_returns_valid_comments(self):
+        model = get_model()
+        review_provider = ReviewCommentProvider(model, verbose=True)
+        with open("tests/data/BasketService.cs", "r") as file:
+            current_code = file.read()
+        with open("tests/data/BasketService-previous.cs", "r") as file:
+            previous_code = file.read()
+        model = get_model()
+        lang = "C#"
+        syntax_provider = SyntaxProvider(model, verbose=True)
+        methods = syntax_provider.get_method_blocks(current_code, lang)
+        changeset_provider = ChangesetProvider()
+        blocks = changeset_provider.get_changed_blocks(previous_code, current_code)
+        changed_methods = changeset_provider.get_changed_methods(methods, blocks)
+        feedback = review_provider.get_review_comments(
+            current_code, changed_methods, lang
+        )
+        self.assertGreater(len(feedback), 0)
