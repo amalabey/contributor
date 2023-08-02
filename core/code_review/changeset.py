@@ -72,10 +72,10 @@ class ChangesetProvider(BaseChangesetProvider):
             index += 1
             if blockStart == 0:
                 blockStart = changed_line_num
+                index = changed_line_num
                 continue
             elif changed_line_num > index:
                 yield (blockStart, changed_line_num)
                 blockStart = 0
-            index = changed_line_num
         if blockStart > 0:
             yield (blockStart, index)
