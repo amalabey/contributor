@@ -33,7 +33,7 @@ class CodeReviwer(object):
         for changed_file in changed_files:
             language = self.language_detector.detect_language(changed_file)
             method_blocks = self.syntax_provider.get_method_blocks(
-                changed_file, language
+                changed_file.contents, language
             )
             changed_blocks = self.changeset_provider.get_changed_blocks(
                 changed_file.original_contents, changed_file.contents
