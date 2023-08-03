@@ -1,6 +1,6 @@
 import unittest
 from core.code_review.changeset import ChangesetProvider
-from core.code_review.review import ReviewCommentProvider
+from core.code_review.comments import ReviewCommentProvider
 from core.code_review.syntax import SyntaxProvider
 from tests.helpers import get_model
 
