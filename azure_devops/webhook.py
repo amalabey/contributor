@@ -1,6 +1,5 @@
 import threading
 from flask import Flask, jsonify, request
-
 from azure_devops.actions import review_pull_request
 from core.dispatch import TaskDispatcher
 

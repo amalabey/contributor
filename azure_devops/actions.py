@@ -1,5 +1,6 @@
 import os
 from dotenv import load_dotenv
+from langchain.chat_models import ChatOpenAI
 from langchain.chat_models import AzureChatOpenAI
 from azure_devops.pull_requests import (
     AzureDevOpsPullRequestDataProvider,
@@ -21,13 +22,19 @@ def review_pull_request(
     temperature: float = DEFAULT_TEMPERATURE,
 ):
     load_dotenv(env_config_file)
-    model_name = os.getenv("MODEL_NAME")
-    deployment_name = os.getenv("DEPLOYMENT_NAME")
-    llm_model = AzureChatOpenAI(
-        model_name=model_name,
-        deployment_name=deployment_name,
-        temperature=temperature,
-    )
+    openai_type = os.getenv("OPENAI_API_TYPE")
+    if openai_type is not None and openai_type == "azure":
+        model_name = os.getenv("MODEL_NAME")
+        deployment_name = os.getenv("DEPLOYMENT_NAME")
+        llm_model = AzureChatOpenAI(
+            model_name=model_name,
+            deployment_name=deployment_name,
+            temperature=temperature,
+        )
+    else:
+        model_name = os.getenv("MODEL_NAME")
+        llm_model = ChatOpenAI(model_name=model_name, temperature=temperature)
+
     syntax_provider = SyntaxProvider(llm_model, verbose=True)
     changeset_provider = ChangesetProvider()
     review_provider = ReviewCommentProvider(llm_model, verbose=True)
