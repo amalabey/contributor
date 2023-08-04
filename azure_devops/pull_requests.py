@@ -84,14 +84,20 @@ class AzureDevOpsPullRequestDecoratorService(BasePullRequestDecoratorService):
     ) -> None:
         api_url = f"https://dev.azure.com/{self._org}/{self._project_name}/_apis/git/repositories/{self._repo_name}/pullRequests/{pull_request_id}/threads?api-version=6.1-preview.1"
         api = AzureDevOpsClient()
+        existing_comments = self._get_existing_comments(
+            api, pull_request_id, file_path, line_num
+        )
         for comment in comments.items:
+            if any(c for c in existing_comments if comment.comment in c):
+                print(f"Comment already exists: {comment.comment}")
+                continue
             payload = self._get_comment_payload(file_path, line_num, comment)
             api.send_api_request(api_url, "POST", data=payload)
 
     def _get_comment_payload(
         self, file_path: str, line_num: int, comment: ReviewComment
     ):
-        comment_text = f"{comment.feedback} \n ```\n{comment.example}\n```"
+        comment_text = f"{comment.comment} \n ```\n{comment.example}\n```"
         payload = json.dumps(
             {
                 "comments": [
@@ -109,3 +115,30 @@ class AzureDevOpsPullRequestDecoratorService(BasePullRequestDecoratorService):
             }
         )
         return payload
+
+    def _get_existing_comments(
+        self, api_client: AzureDevOpsClient, pr_id: str, target_file: str, line_num: int
+    ) -> List[str]:
+        existing_comments = list()
+        api_url = f"https://dev.azure.com/{self._org}/{self._project_name}/_apis/git/repositories/{self._repo_name}/pullRequests/{pr_id}/threads?api-version=7.0"
+        response = api_client.send_api_request(api_url, "GET")
+        for thread in response["value"]:
+            if "threadContext" not in thread or thread["threadContext"] is None:
+                continue
+            file_path = (
+                thread["threadContext"]["filePath"]
+                if "filePath" in thread["threadContext"]
+                else None
+            )
+            line = (
+                thread["threadContext"]["rightFileStart"]["line"]
+                if "rightFileStart" in thread["threadContext"]
+                else 0
+            )
+
+            if file_path == target_file and line == line_num:
+                for comment in thread["comments"]:
+                    content = comment["content"] if "content" in comment else None
+                    if content is not None:
+                        existing_comments.append(content)
+        return existing_comments
