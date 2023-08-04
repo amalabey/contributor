@@ -3,6 +3,7 @@ import sys
 from dotenv import load_dotenv
 from azure_devops.register import WebhookManager
 from azure_devops.api import AzureDevOpsClient
+from azure_devops.webhook import app
 
 
 if __name__ == "__main__":
@@ -28,3 +29,5 @@ if __name__ == "__main__":
         client = AzureDevOpsClient()
         registrar = WebhookManager(client, org, project_name)
         registrar.register_webhooks(webhook_url, webhook_api_key)
+    elif len(args) > 0 and args[0] == "serve":
+        app.run()
