@@ -5,7 +5,7 @@ import requests
 """ Api client that uses the REST api to interact with Azure DevOps."""
 
 
-class ApiClient(object):
+class AzureDevOpsClient(object):
     def __init__(self, personal_access_token=None):
         if personal_access_token is not None:
             self.personal_access_token = personal_access_token
