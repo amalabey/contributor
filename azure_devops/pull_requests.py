@@ -97,7 +97,7 @@ class AzureDevOpsPullRequestDecoratorService(BasePullRequestDecoratorService):
     def _get_comment_payload(
         self, file_path: str, line_num: int, comment: ReviewComment
     ):
-        comment_text = f"{comment.comment} \n ```\n{comment.example}\n```"
+        comment_text = f"{comment.comment} \n {comment.example}"
         payload = json.dumps(
             {
                 "comments": [
