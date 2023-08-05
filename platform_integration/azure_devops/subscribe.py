@@ -1,18 +1,18 @@
 import json
 import os
 import sys
-from azure_devops.api import AzureDevOpsClient
+from azure_devops.api import AzureDevOpsApi
+from platform_integration.base import BaseWebhookSubscriber
+from platform_integration.constants import AZURE_DEVOPS_PLATFORM_NAME, X_APP_NAME
 
-X_APP_NAME = "AzureDevOpsContributor"
 
-
-class WebhookManager(object):
-    def __init__(self, client: AzureDevOpsClient, org: str, project_name: str):
+class AzureDevOpsWebhookSubscriber(BaseWebhookSubscriber):
+    def __init__(self, client: AzureDevOpsApi, org: str, project_name: str):
         self._client = client
         self._org = org
         self._project_name = project_name
 
-    def register_webhooks(self, webhook_url: str, api_key: str = None) -> None:
+    def subscribe(self, base_url: str, api_key: str = None) -> None:
         """Registers webhooks for the given URL."""
         project_id = self._get_project_id()
         existing_subs = self._get_existing_subscriptions()
@@ -20,7 +20,7 @@ class WebhookManager(object):
         # Register webhooks for PR creation and update events
         for event_type in ["git.pullrequest.created", "git.pullrequest.updated"]:
             payload = self._get_subscription_payload(
-                project_id, webhook_url, api_key, event_type
+                project_id, f"{base_url}/pull_request", api_key, event_type
             )
             # Check if subscription already exists and replace if it does
             existing_sub_id = self._existing_subscription_id(existing_subs, event_type)
@@ -81,7 +81,7 @@ class WebhookManager(object):
                 },
                 "consumerInputs": {
                     "acceptUntrustedCerts": "true",
-                    "httpHeaders": f"X-ApiKey: {api_key}\nX-App: {X_APP_NAME}",
+                    "httpHeaders": f"X-ApiKey: {api_key}\nX-App: {X_APP_NAME}\nX-Platform: {AZURE_DEVOPS_PLATFORM_NAME}",
                     "url": webhook_url,
                 },
             }
@@ -96,8 +96,8 @@ class WebhookManager(object):
 
 if __name__ == "__main__":
     args = sys.argv[1:]
-    webhook_url = args[0]
-    if not webhook_url:
+    base_url = args[0]
+    if not base_url:
         raise Exception("Webhook URL must be provided as an argument")
 
     org = os.getenv("AZURE_DEVOPS_ORG")
@@ -109,6 +109,6 @@ if __name__ == "__main__":
         raise Exception("AZURE_DEVOPS_PROJECT environment variable must be set")
 
     webhook_api_key = os.getenv("WEBHOOK_API_KEY")
-    client = AzureDevOpsClient()
-    registrar = WebhookManager(client, org, project_name)
-    registrar.register_webhooks(webhook_url, webhook_api_key)
+    client = AzureDevOpsApi()
+    registrar = AzureDevOpsWebhookSubscriber(client, org, project_name)
+    registrar.register_webhooks(base_url, webhook_api_key)

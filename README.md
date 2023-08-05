@@ -54,12 +54,12 @@ ngrok http 5000
 
 Run below command to register webhooks in Azure DevOps:
 ```
-python -m azure_devops register https://<ngrok domain name from above>/webhook
+python -m platform_integration.azure_devops register https://<ngrok domain name from above>
 ```
 
 Serve, the webhook API that responds to Pull Request Create/Update events by getting feedback for code changes and posting them to your Pull Request as comments:
 ```
-python -m azure_devops serve
+python -m platform_integration serve
 ```
 
 ### Test the Solution

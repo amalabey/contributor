@@ -1,16 +1,15 @@
 import os
 import sys
 from dotenv import load_dotenv
-from azure_devops.register import WebhookManager
-from azure_devops.api import AzureDevOpsClient
-from azure_devops.webhook import app
+from platform_integration.azure_devops.subscribe import WebhookManager
+from azure_devops.api import AzureDevOpsApi
 
 
 if __name__ == "__main__":
     args = sys.argv[1:]
     if len(args) > 1 and args[0] == "register":
-        webhook_url = args[1]
-        if not webhook_url:
+        base_url = args[1]
+        if not base_url:
             raise Exception("Webhook URL must be provided as an argument")
 
         # load env variables from .env if it exists
@@ -26,8 +25,8 @@ if __name__ == "__main__":
             raise Exception("AZURE_DEVOPS_PROJECT environment variable must be set")
 
         webhook_api_key = os.getenv("WEBHOOK_API_KEY")
-        client = AzureDevOpsClient()
+        client = AzureDevOpsApi()
         registrar = WebhookManager(client, org, project_name)
-        registrar.register_webhooks(webhook_url, webhook_api_key)
-    elif len(args) > 0 and args[0] == "serve":
-        app.run()
+        registrar.register_webhooks(base_url, webhook_api_key)
+    else:
+        print("Unknown command")
