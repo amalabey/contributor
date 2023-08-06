@@ -1,9 +1,15 @@
 import json
 import os
 import sys
-from azure_devops.api import AzureDevOpsApi
+from platform_integration.azure_devops.api import AzureDevOpsApi
 from platform_integration.base import BaseWebhookSubscriber
-from platform_integration.constants import AZURE_DEVOPS_PLATFORM_NAME, X_APP_NAME
+from platform_integration.constants import (
+    AZURE_DEVOPS_PLATFORM_NAME,
+    APP_NAME,
+    API_KEY_HEADER,
+    PLATFORM_NAME_HEADER,
+    APP_NAME_HEADER,
+)
 
 
 class AzureDevOpsWebhookSubscriber(BaseWebhookSubscriber):
@@ -39,7 +45,7 @@ class AzureDevOpsWebhookSubscriber(BaseWebhookSubscriber):
         if subs_for_event_type:
             for sub in subs_for_event_type:
                 headers = self._get_headers(sub["consumerInputs"]["httpHeaders"])
-                if headers["X-App"] == X_APP_NAME:
+                if headers["X-App"] == APP_NAME:
                     return sub["id"]
         return None
 
@@ -81,7 +87,7 @@ class AzureDevOpsWebhookSubscriber(BaseWebhookSubscriber):
                 },
                 "consumerInputs": {
                     "acceptUntrustedCerts": "true",
-                    "httpHeaders": f"X-ApiKey: {api_key}\nX-App: {X_APP_NAME}\nX-Platform: {AZURE_DEVOPS_PLATFORM_NAME}",
+                    "httpHeaders": f"{API_KEY_HEADER}: {api_key}\n{APP_NAME_HEADER}: {APP_NAME}\n{PLATFORM_NAME_HEADER}: {AZURE_DEVOPS_PLATFORM_NAME}",
                     "url": webhook_url,
                 },
             }

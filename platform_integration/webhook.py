@@ -4,7 +4,12 @@ from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from platform_integration.actions import review_pull_request
 from core.dispatch import TaskDispatcher
-from platform_integration.constants import AZURE_DEVOPS_PLATFORM_NAME
+from platform_integration.constants import (
+    AZURE_DEVOPS_PLATFORM_NAME,
+    API_KEY_HEADER,
+    PLATFORM_NAME_HEADER,
+    API_KEY_CONFIG_KEY,
+)
 
 app = Flask(__name__)
 
@@ -14,14 +19,14 @@ def handle_webhook():
     data = request.get_json()
 
     # Validate API key if it is set
-    expected_api_key = os.getenv("WEBHOOK_API_KEY")
+    expected_api_key = os.getenv(API_KEY_CONFIG_KEY)
     if expected_api_key is not None:
-        api_key = request.headers.get("X-Api-Key")
+        api_key = request.headers.get(API_KEY_HEADER)
         if api_key != expected_api_key:
             return jsonify({"status": "error", "message": "Unauthorized"}), 403
 
     # Run PR review in a separate thread
-    platform = request.headers.get("X-Platform")
+    platform = request.headers.get(PLATFORM_NAME_HEADER)
     if platform == AZURE_DEVOPS_PLATFORM_NAME:
         pull_request_id = data["resource"]["pullRequestId"]
         print(

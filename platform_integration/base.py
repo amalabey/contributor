@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
-from ast import List
-from typing import Iterator, Tuple
+from typing import Iterator, Tuple, List
 
 
 class BaseDevOpsApiClient(ABC):

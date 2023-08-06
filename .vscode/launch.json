@@ -34,7 +34,7 @@
       "request": "launch",
       "module": "flask",
       "env": {
-        "FLASK_APP": "azure_devops//webhook.py",
+        "FLASK_APP": "platform_integration//webhook.py",
         "FLASK_DEBUG": "1"
       },
       "args": ["run", "--no-debugger", "--no-reload"],

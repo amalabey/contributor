@@ -1,8 +1,9 @@
 import os
 import sys
 from dotenv import load_dotenv
-from platform_integration.azure_devops.subscribe import WebhookManager
-from azure_devops.api import AzureDevOpsApi
+from platform_integration.azure_devops.subscribe import AzureDevOpsWebhookSubscriber
+from platform_integration.azure_devops.api import AzureDevOpsApi
+from platform_integration.constants import API_KEY_CONFIG_KEY
 
 
 if __name__ == "__main__":
@@ -24,9 +25,9 @@ if __name__ == "__main__":
         if not project_name:
             raise Exception("AZURE_DEVOPS_PROJECT environment variable must be set")
 
-        webhook_api_key = os.getenv("WEBHOOK_API_KEY")
+        webhook_api_key = os.getenv(API_KEY_CONFIG_KEY)
         client = AzureDevOpsApi()
-        registrar = WebhookManager(client, org, project_name)
-        registrar.register_webhooks(base_url, webhook_api_key)
+        subscriber = AzureDevOpsWebhookSubscriber(client, org, project_name)
+        subscriber.subscribe(base_url, webhook_api_key)
     else:
         print("Unknown command")
