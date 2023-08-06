@@ -43,7 +43,7 @@ class AzureDevOpsWebhookSubscriber(BaseWebhookSubscriber):
         if subs_for_event_type:
             for sub in subs_for_event_type:
                 headers = self._get_headers(sub["consumerInputs"]["httpHeaders"])
-                if headers["X-App"] == APP_NAME:
+                if headers[APP_NAME_HEADER] == APP_NAME:
                     return sub["id"]
         return None
 
