@@ -96,7 +96,7 @@ class AzureDevOpsApiClient(BaseDevOpsApiClient):
         self._api.send_api_request(api_url, "POST", data=payload)
 
     def get_pull_request_comments(
-        self, pr_id: str, target_file: str, line_num: int
+        self, pr_id: str, target_file: str, start_line: int, end_line: int
     ) -> List[str]:
         existing_comments = list()
         api_url = f"https://dev.azure.com/{self._org}/{self._project_name}/_apis/git/repositories/{self._repo_name}/pullRequests/{pr_id}/threads?api-version=7.0"
@@ -115,7 +115,7 @@ class AzureDevOpsApiClient(BaseDevOpsApiClient):
                 else 0
             )
 
-            if file_path == target_file and line == line_num:
+            if file_path == target_file and line >= start_line and line <= end_line:
                 for comment in thread["comments"]:
                     content = comment["content"] if "content" in comment else None
                     if content is not None:

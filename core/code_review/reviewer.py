@@ -36,7 +36,7 @@ class CodeReviwer(object):
                 changed_file.contents, language
             )
             changed_blocks = self.changeset_provider.get_changed_blocks(
-                changed_file.original_contents, changed_file.contents
+                changed_file.contents, changed_file.original_contents
             )
             changed_methods = self.changeset_provider.get_changed_methods(
                 method_blocks, changed_blocks
@@ -48,6 +48,6 @@ class CodeReviwer(object):
                 self.pr_decorator_svc.post_comments(
                     pull_request_id,
                     changed_file.path,
-                    method.start_line,
+                    method,
                     review_comments,
                 )

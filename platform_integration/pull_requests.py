@@ -5,6 +5,7 @@ from core.code_review.base import (
 )
 from core.code_review.models import (
     CodeFileChange,
+    MethodInfo,
     ReviewCommentsCollection,
 )
 from platform_integration.base import BaseDevOpsApiClient
@@ -52,11 +53,11 @@ class PullRequestDecoratorService(BasePullRequestDecoratorService):
         self,
         pull_request_id: str,
         file_path: str,
-        line_num: int,
+        method: MethodInfo,
         comments: ReviewCommentsCollection,
     ) -> None:
         existing_comments = self._api_client.get_pull_request_comments(
-            pull_request_id, file_path, line_num
+            pull_request_id, file_path, method.start_line, method.end_line
         )
         for review_comment in comments.items:
             if any(c for c in existing_comments if review_comment.comment in c):
@@ -64,5 +65,8 @@ class PullRequestDecoratorService(BasePullRequestDecoratorService):
                 continue
             comment_text = f"{review_comment.comment} \n {review_comment.example}"
             self._api_client.post_pull_request_comment(
-                pull_request_id, file_path, line_num + review_comment.line, comment_text
+                pull_request_id,
+                file_path,
+                method.start_line + review_comment.line,
+                comment_text,
             )

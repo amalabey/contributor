@@ -29,7 +29,7 @@ class BaseDevOpsApiClient(ABC):
 
     @abstractmethod
     def get_pull_request_comments(
-        self, pr_id: str, target_file: str, line_num: int
+        self, pr_id: str, target_file: str, start_line: int, end_line: int
     ) -> List[str]:
         pass
 

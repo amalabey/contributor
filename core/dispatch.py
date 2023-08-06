@@ -17,7 +17,8 @@ class TaskDispatcher(object):
             task()
         finally:
             task_lock.release()
-            del TaskDispatcher._locks[task_type]
+            if task_type in TaskDispatcher._locks:
+                del TaskDispatcher._locks[task_type]
 
     @staticmethod
     def _get_task_lock(task_type):
