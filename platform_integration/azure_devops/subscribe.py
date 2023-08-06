@@ -1,6 +1,4 @@
 import json
-import os
-import sys
 from platform_integration.azure_devops.api import AzureDevOpsApi
 from platform_integration.base import BaseWebhookSubscriber
 from platform_integration.constants import (
@@ -98,23 +96,3 @@ class AzureDevOpsWebhookSubscriber(BaseWebhookSubscriber):
         api_url = f"https://dev.azure.com/{self._org}/_apis/hooks/subscriptions?api-version=6.1-preview.1"
         response = self._client.send_api_request(api_url, "GET")
         return response["value"]
-
-
-if __name__ == "__main__":
-    args = sys.argv[1:]
-    base_url = args[0]
-    if not base_url:
-        raise Exception("Webhook URL must be provided as an argument")
-
-    org = os.getenv("AZURE_DEVOPS_ORG")
-    if not org:
-        raise Exception("AZURE_DEVOPS_ORG environment variable must be set")
-
-    project_name = os.getenv("AZURE_DEVOPS_PROJECT")
-    if not project_name:
-        raise Exception("AZURE_DEVOPS_PROJECT environment variable must be set")
-
-    webhook_api_key = os.getenv("WEBHOOK_API_KEY")
-    client = AzureDevOpsApi()
-    registrar = AzureDevOpsWebhookSubscriber(client, org, project_name)
-    registrar.register_webhooks(base_url, webhook_api_key)
