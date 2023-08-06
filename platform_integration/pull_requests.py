@@ -64,5 +64,5 @@ class PullRequestDecoratorService(BasePullRequestDecoratorService):
                 continue
             comment_text = f"{review_comment.comment} \n {review_comment.example}"
             self._api_client.post_pull_request_comment(
-                pull_request_id, file_path, line_num, comment_text
+                pull_request_id, file_path, line_num + review_comment.line, comment_text
             )
