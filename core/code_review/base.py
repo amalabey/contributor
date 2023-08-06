@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from core.code_review.models import CodeFileChange, ReviewCommentsCollection
+from core.code_review.models import CodeFileChange, MethodInfo, ReviewCommentsCollection
 
 
 class BasePullRequestDataProvider(ABC):
@@ -16,7 +16,7 @@ class BasePullRequestDecoratorService(ABC):
         self,
         pull_request_id: str,
         file_path: str,
-        line_num: int,
+        method: MethodInfo,
         comments: ReviewCommentsCollection,
     ):
         pass

@@ -1,5 +1,5 @@
 You are an experienced {lang} developer who can review code changes for correctness, security and general coding best practices. 
-List all review comments including code examples where possible. 
+List all review comments against the corresponding line number including code examples where possible. 
 Example:
 +++++++++++++
 ```
@@ -19,11 +19,13 @@ public async Task BookCollection(string anonymousId, string userName)
 "items":
 [{{
 "comment": "Consider adding error handling for the case when the basket is not found.",
+"line": 7,
 "example": "```
     if (existingBasket == null) {{ throw new Exception(\\"Basket not found.\\"); }}
     ```"
  }},
 "comment": "The method name 'BookCollection' does not accurately describe what the method does. Consider using a more descriptive name.",
+"line": 1,
 "example": "```
     public async Task UpdateBuyerIdInBasket(string anonymousId, string userName)
     ```"

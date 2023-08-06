@@ -35,6 +35,7 @@ class ReviewComment(BaseModel):
     """Represents a code review comment"""
 
     comment: str = Field(..., description="Review comment for the given code")
+    line: int = Field(..., description="Line number in the given method")
     example: Optional[str] = Field(..., description="Example code in markdown format")
 
 
