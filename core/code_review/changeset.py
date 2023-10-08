@@ -16,7 +16,7 @@ class BaseChangesetProvider(ABC):
 
     @abstractmethod
     def get_changed_blocks(
-        self, current_code: str, previous_code: str | None
+        self, current_code: str, previous_code: str
     ) -> CodeBlocksCollection:
         pass
 
@@ -44,7 +44,7 @@ class ChangesetProvider(BaseChangesetProvider):
         return MethodInfoCollection(items=changed_methods)
 
     def get_changed_blocks(
-        self, current_code: str, previous_code: str | None
+        self, current_code: str, previous_code: str
     ) -> CodeBlocksCollection:
         changed_blocks = [
             CodeBlock(start_line=blk[0], end_line=blk[1])
