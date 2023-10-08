@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 import os
 from langchain.llms.base import BaseLLM
 from langchain import PromptTemplate
-from core.code_review.models import MethodInfoCollection
+from core.shared.models import MethodInfoCollection
 from langchain.chains.openai_functions import create_structured_output_chain
 
 

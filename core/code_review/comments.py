@@ -5,9 +5,11 @@ from langchain.llms.base import BaseLLM
 from langchain import PromptTemplate
 from langchain.chains.openai_functions import create_structured_output_chain
 
-from core.code_review.models import (
+from core.shared.models import (
     MethodInfo,
     MethodInfoCollection,
+)
+from core.code_review.models import (
     ReviewCommentsCollection,
 )
 
@@ -45,7 +47,7 @@ class ReviewCommentProvider(BaseReviewCommentProvider):
         code_lines = code_file_contents.splitlines()
         for method in changed_methods.items:
             method_code = "\n".join(
-                code_lines[method.start_line - 1 : method.end_line + 1]
+                code_lines[method.start_line - 1: method.end_line + 1]
             )
             result_dict = chain.run({"input": method_code, "lang": lang})
             review_comments = ReviewCommentsCollection.parse_obj(result_dict)

@@ -11,7 +11,7 @@ from core.code_review.comments import ReviewCommentProvider
 from core.code_review.lang import LanguageDetector
 from core.code_review.reviewer import CodeReviwer
 from platform_integration.constants import AZURE_DEVOPS_PLATFORM_NAME
-from core.code_review.syntax import SyntaxProvider
+from core.shared.syntax import SyntaxProvider
 
 DEFAULT_TEMPERATURE = 0.0
 

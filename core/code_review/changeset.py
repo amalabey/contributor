@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from difflib import Differ
 from typing import Iterator
-from core.code_review.models import (
+from core.shared.models import (
     CodeBlock,
     CodeBlocksCollection,
     MethodInfoCollection,
@@ -16,7 +16,7 @@ class BaseChangesetProvider(ABC):
 
     @abstractmethod
     def get_changed_blocks(
-        self, current_code: str, previous_code: str
+        self, current_code: str, previous_code: str | None
     ) -> CodeBlocksCollection:
         pass
 
@@ -44,7 +44,7 @@ class ChangesetProvider(BaseChangesetProvider):
         return MethodInfoCollection(items=changed_methods)
 
     def get_changed_blocks(
-        self, current_code: str, previous_code: str
+        self, current_code: str, previous_code: str | None
     ) -> CodeBlocksCollection:
         changed_blocks = [
             CodeBlock(start_line=blk[0], end_line=blk[1])

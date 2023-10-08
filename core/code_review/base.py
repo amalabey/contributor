@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
-
-from core.code_review.models import CodeFileChange, MethodInfo, ReviewCommentsCollection
+from core.shared.models import MethodInfo
+from core.code_review.models import CodeFileChange, ReviewCommentsCollection
 
 
 class BasePullRequestDataProvider(ABC):

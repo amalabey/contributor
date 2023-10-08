@@ -5,7 +5,7 @@ from core.code_review.base import (
 from core.code_review.changeset import BaseChangesetProvider
 from core.code_review.comments import BaseReviewCommentProvider
 from core.code_review.lang import BaseLanguageDetector
-from core.code_review.syntax import BaseSyntaxProvider
+from core.shared.syntax import BaseSyntaxProvider
 
 
 """ Orchestrates the code review process """

@@ -8,7 +8,7 @@ packages = [{include = "co_developer"}]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-langchain = "^0.0.240"
+langchain = "^0.0.310"
 openai = "^0.27.8"
 urllib3 = "1.26.6"
 flask = "^2.3.2"

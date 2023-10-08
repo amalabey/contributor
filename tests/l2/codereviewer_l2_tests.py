@@ -4,7 +4,7 @@ from core.code_review.changeset import ChangesetProvider
 from core.code_review.comments import ReviewCommentProvider
 from core.code_review.lang import LanguageDetector
 from core.code_review.reviewer import CodeReviwer
-from core.code_review.syntax import SyntaxProvider
+from core.shared.syntax import SyntaxProvider
 from tests.builders.model_builder import ModelBuilder
 from tests.builders.pull_request_builder import PullRequestBuilder
 from tests.l2.stubs import PullRequestDataProviderStub, PullRequestDecoratorServiceStub
