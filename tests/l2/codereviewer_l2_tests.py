@@ -11,9 +11,14 @@ from tests.l2.stubs import PullRequestDataProviderStub, PullRequestDecoratorServ
 
 
 class CodeReviewerL2Tests(unittest.TestCase):
-    def test_review_pull_request_when_single_changed_file_posts_valid_comments(self):
+    def test_review_pull_request_when_single_changed_file_posts_valid_comments(
+        self,
+    ):
         llm_model = (
-            ModelBuilder().with_azure_chat_open_ai(env_config_file=".env").build()
+            # ModelBuilder().with_azure_chat_open_ai(env_config_file=".env").build()
+            ModelBuilder()
+            .with_codellama()
+            .build()
         )
         syntax_provider = SyntaxProvider(llm_model, verbose=True)
         changeset_provider = ChangesetProvider()

@@ -2,6 +2,7 @@ import os
 from langchain.chat_models import AzureChatOpenAI
 from langchain.llms.base import BaseLLM
 from dotenv import load_dotenv
+from langchain.chat_models import ChatOllama
 
 DEFAULT_TEMPERATURE = 0.0
 
@@ -23,6 +24,10 @@ class ModelBuilder:
             deployment_name=deployment_name,
             temperature=temperature,
         )
+        return self
+
+    def with_codellama(self) -> "ModelBuilder":
+        self._llm_model = ChatOllama(model="codellama")
         return self
 
     def build(self) -> BaseLLM:
